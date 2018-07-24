@@ -234,6 +234,11 @@ function eWeLink(log, config, api) {
                                 platform.updatePowerStateCharacteristic(json.deviceid, json.params.switch);
                             }
 
+
+                            if (json.hasOwnProperty("params") && json.params.hasOwnProperty("currentTemperature")) {
+                                platform.updateCurrentTemperatureCharacteristic(json.deviceid, json.params.currentTemperature);
+                            }
+
                         }
 
                     }
@@ -412,6 +417,30 @@ eWeLink.prototype.updatePowerStateCharacteristic = function(deviceId, state, dev
         .setCharacteristic(Characteristic.On, isOn);
 
 };
+
+eWeLink.prototype.updateCurrentTemperatureCharacteristic = function(deviceId, state, device = null, channel = null) {
+
+    // Used when we receive an update from an external source
+
+    let platform = this;
+
+    let currentTemperature = 0.0;
+
+    let accessory = platform.accessories.get(deviceId);
+
+    if(typeof accessory === 'undefined' && device) {
+        platform.addAccessory(device, deviceId);
+        accessory = platform.accessories.get(deviceId);
+    }
+
+
+    platform.log("Updating recorded Characteristic.CurrentTemperature for [%s] to [%s]. No request will be sent to the device.", accessory.displayName, currentTemperature);
+
+    accessory.getService(Service.TemperatureSensor)
+        .setCharacteristic(Characteristic.CurrentTemperature, currentTemperature);
+
+};
+
 
 
 eWeLink.prototype.getPowerState = function(accessory, callback) {
