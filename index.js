@@ -436,7 +436,7 @@ eWeLink.prototype.updateCurrentTemperatureCharacteristic = function(deviceId, st
 
     platform.log("Updating recorded Characteristic.CurrentTemperature for [%s] to [%s]. No request will be sent to the device.", accessory.displayName, currentTemperature);
 
-    accessory.getService(Service.TemperatureSensor)
+    accessory.getService(Service.Switch)
         .setCharacteristic(Characteristic.CurrentTemperature, currentTemperature);
 
 };
